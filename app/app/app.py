@@ -1,24 +1,44 @@
 from flask import Flask, request, jsonify
-import psutil
-import psycopg2
-import json
+import os
+import time
 import datetime
 import threading
-import time
+import psutil
 import redis
-import os
+import psycopg2
+
+from dotenv import load_dotenv
+
+# LOAD ENV
+load_dotenv()
+
+# REQUIRED ENV KEYS 
+required_env_vars = [
+    "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD",
+    "DB_HOST", "DB_PORT", "REDIS_HOST", "REDIS_PORT"
+]
+
+# VALIDATE ALL REQUIRED ENV VARIABLES
+for var in required_env_vars:
+    if not os.getenv(var):
+        raise RuntimeError(f"Missing required environment variable: {var}")
 
 # POSTGRES CONFIG
 DB_CONFIG = {
-    "dbname": "monitoringdb",
-    "user": "postgres",
-    "password": "clear",
-    "host": "localhost",
-    "port": 5432
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port": int(os.getenv("DB_PORT"))
 }
 
 # REDIS CONFIG
-r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.Redis(
+    host=os.getenv("REDIS_HOST"),
+    port=int(os.getenv("REDIS_PORT")),
+    db=0,
+    decode_responses=True
+)
 
 # POSTGRES CONNECTION
 def get_db_connection():
@@ -92,7 +112,7 @@ def create_app():
         disk = psutil.disk_usage('/').percent
 
         # SAVE TO REDIS
-        r.hset("latest_metrics", mapping={
+        redis_client.hset("latest_metrics", mapping={
             "timestamp": timestamp.isoformat(),
             "cpu_percent": cpu,
             "memory_percent": memory,
