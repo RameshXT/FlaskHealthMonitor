@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.appLabel }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.appLabel }}
+    spec:
+      containers:
+      - name: {{ .Values.deployment.container.name }}
+        image: {{ .Values.deployment.container.image }}
+        ports:
+        - containerPort: {{ .Values.deployment.container.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.configmap.name }}
+        - secretRef:
+            name: {{ .Values.secret.name }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.deployment.container.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5

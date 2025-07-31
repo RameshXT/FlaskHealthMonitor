@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-redis-config
+data:
+  redis.conf: |
+    maxmemory {{ .Values.redis.config.maxmemory }}
