@@ -12,6 +12,7 @@ spec:
       labels:
         app: {{ .Values.deployment.appLabel }}
     spec:
+      serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
       containers:
       - name: {{ .Values.deployment.container.name }}
         image: {{ .Values.deployment.container.image }}

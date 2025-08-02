@@ -203,3 +203,17 @@ service:
   targetPort: 5000
   nodePort: 30500
 
+###################################### RBAC
+
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+    name: ""
+
+networkPolicy:
+  enabled: true
+
+app:
+  name: flask-app
+

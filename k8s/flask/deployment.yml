@@ -12,14 +12,21 @@ spec:
       labels:
         app: flask-app
     spec:
+      serviceAccountName: flask-app-sa
       containers:
-      - name: flask-app
-        image: rameshxt/flask:v1.1.0
-        ports:
-        - containerPort: 5000
-        envFrom:
-        - configMapRef:
-            name: app-config
-        - secretRef:
-            name: app-secrets
-            
+        - name: flask-app
+          image: rameshxt/flask:v1.1.0
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
