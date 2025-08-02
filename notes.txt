@@ -1,0 +1,11 @@
+Metrics collector API HELM Installation
+
+
+helm repo list
+helm search repo metrics-server
+
+helm install metrics-server metrics-server/metrics-server \
+  --namespace kube-system \
+  --set args="{--kubelet-insecure-tls,--kubelet-preferred-address-types=InternalIP,Hostname}" \
+  --set image.tag=v0.6.4
+
