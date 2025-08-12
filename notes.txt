@@ -1,6 +1,6 @@
 Metrics collector API HELM Installation
 
-
+`
 helm repo list
 helm search repo metrics-server
 
@@ -8,4 +8,57 @@ helm install metrics-server metrics-server/metrics-server \
   --namespace kube-system \
   --set args="{--kubelet-insecure-tls,--kubelet-preferred-address-types=InternalIP,Hostname}" \
   --set image.tag=v0.6.4
+`
 
+DOCKER USED COMMANDS
+
+docker pull nginx:1.25
+docker build -t myapp:2.0 .
+docker images
+docker rmi myapp:1.0
+docker save -o myapp.tar myapp:2.0
+docker load -i myapp.tar
+
+docker run -d --name api -p 8080:8080 -e NODE_ENV=production mynodeapp:latest
+docker run -d --name postgres -v /data/db:/var/lib/postgresql/data postgres:15
+docker ps
+docker ps -a
+docker stop nginx-proxy
+docker start nginx-proxy
+docker restart nginx-proxy
+docker rm test-db
+docker logs -f api
+docker exec -it api bash
+docker inspect api
+
+docker network create myapp-net
+docker run -d --name db --network myapp-net postgres:15
+docker network ls
+docker network inspect myapp-net
+docker network connect myapp-net redis
+docker network disconnect myapp-net old-service
+
+docker volume create pgdata
+docker volume ls
+docker volume inspect pgdata
+docker volume rm olddata
+docker run -d --name db -v pgdata:/var/lib/postgresql/data postgres:15
+
+docker container prune
+docker image prune -a
+docker network prune
+docker volume prune
+docker system prune -a --volumes
+
+docker compose up -d
+docker compose down
+docker compose up -d --build
+docker compose logs -f db
+docker compose up -d --scale api=3
+
+docker tag myapp:2.0 registry.example.com/myteam/myapp:2.0
+docker login registry.example.com
+docker push registry.example.com/myteam/myapp:2.0
+docker pull registry.example.com/myteam/myapp:2.0
+docker export api > api-backup.tar
+docker import api-backup.tar myapi:restored
