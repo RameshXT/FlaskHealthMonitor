@@ -1,0 +1,5 @@
+CPU Usage: 0.0%
+Memory Usage: 19.8%
+Disk Usage: 31.2%
+Network Sent: 435488848
+Network Received: 283565535
